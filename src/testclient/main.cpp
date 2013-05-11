@@ -297,6 +297,7 @@ void ShowHelpConsole(void)
   "[volup]                   send a volume up command to the amp if present" << endl <<
   "[voldown]                 send a volume down command to the amp if present" << endl <<
   "[mute]                    send a mute/unmute command to the amp if present" << endl <<
+  "[key] {addr} {name|code}  send a key press/release command to the specified logical address." << endl <<
   "[self]                    show the list of addresses controlled by libCEC" << endl <<
   "[scan]                    scan the CEC bus and display device info" << endl <<
   "[mon] {1|0}               enable or disable CEC bus monitoring." << endl <<
@@ -603,6 +604,133 @@ bool ProcessCommandMUTE(ICECAdapter *parser, const string &command, string & UNU
   {
     PrintToStdOut("mute: %2X", parser->MuteAudio());
     return true;
+  }
+
+  return false;
+}
+
+bool CECKeyNameToCode(const string &keyname, cec_user_control_code *keycode) {
+#define RETURN_CODE_FOR(code, name) if (keyname == (name)) { *keycode = code; return true; }
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SELECT, "select");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_UP, "up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_DOWN, "down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_LEFT, "left");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RIGHT, "right");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RIGHT_UP, "right_up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RIGHT_DOWN, "right_down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_LEFT_UP, "left_up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_LEFT_DOWN, "left_down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_ROOT_MENU, "root_menu");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SETUP_MENU, "setup_menu");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_CONTENTS_MENU, "contents_menu");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_FAVORITE_MENU, "favorite_menu");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_EXIT, "exit");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER0, "number0");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER1, "number1");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER2, "number2");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER3, "number3");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER4, "number4");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER5, "number5");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER6, "number6");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER7, "number7");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER8, "number8");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NUMBER9, "number9");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_DOT, "dot");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_ENTER, "enter");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_CLEAR, "clear");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_NEXT_FAVORITE, "next_favorite");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_CHANNEL_UP, "channel_up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_CHANNEL_DOWN, "channel_down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PREVIOUS_CHANNEL, "previous_channel");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SOUND_SELECT, "sound_select");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_INPUT_SELECT, "input_select");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_DISPLAY_INFORMATION, "display_information");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_HELP, "help");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAGE_UP, "page_up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAGE_DOWN, "page_down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_POWER, "power");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_VOLUME_UP, "volume_up");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_VOLUME_DOWN, "volume_down");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_MUTE, "mute");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PLAY, "play");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_STOP, "stop");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAUSE, "pause");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RECORD, "record");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_REWIND, "rewind");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_FAST_FORWARD, "fast_forward");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_EJECT, "eject");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_FORWARD, "forward");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_BACKWARD, "backward");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_STOP_RECORD, "stop_record");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAUSE_RECORD, "pause_record");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_ANGLE, "angle");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SUB_PICTURE, "sub_picture");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_VIDEO_ON_DEMAND, "video_on_demand");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_ELECTRONIC_PROGRAM_GUIDE, "electronic_program_guide");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_TIMER_PROGRAMMING, "timer_programming");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_INITIAL_CONFIGURATION, "initial_configuration");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PLAY_FUNCTION, "play_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAUSE_PLAY_FUNCTION, "pause_play_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RECORD_FUNCTION, "record_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_PAUSE_RECORD_FUNCTION, "pause_record_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_STOP_FUNCTION, "stop_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_MUTE_FUNCTION, "mute_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_RESTORE_VOLUME_FUNCTION, "restore_volume_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_TUNE_FUNCTION, "tune_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SELECT_MEDIA_FUNCTION, "select_media_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SELECT_AV_INPUT_FUNCTION, "select_av_input_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_SELECT_AUDIO_INPUT_FUNCTION, "select_audio_input_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_POWER_TOGGLE_FUNCTION, "power_toggle_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_POWER_OFF_FUNCTION, "power_off_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_POWER_ON_FUNCTION, "power_on_function");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_F1_BLUE, "f1_blue");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_F2_RED, "f2_red");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_F3_GREEN, "f3_green");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_F4_YELLOW, "f4_yellow");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_F5, "f5");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_DATA, "data");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_AN_RETURN, "an_return");
+  RETURN_CODE_FOR(CEC_USER_CONTROL_CODE_AN_CHANNELS_LIST, "an_channels_list");
+#undef RETURN_CODE_FOR
+
+  // not found -> interpret as raw key value
+  int rawcode = atoi(keyname.c_str());
+  if (0x0 <= rawcode && rawcode <= CEC_USER_CONTROL_CODE_MAX)
+  {
+    *keycode = (cec_user_control_code)rawcode;
+    return true;
+  }
+
+  // finally not found
+  *keycode = CEC_USER_CONTROL_CODE_UNKNOWN;
+  return false;
+}
+
+bool ProcessCommandKEY(ICECAdapter *parser, const string &command, string & arguments)
+{
+  if (command == "key")
+  {
+    string strValue, strKey;
+    uint8_t iValue = 0;
+    cec_user_control_code code = CEC_USER_CONTROL_CODE_UNKNOWN;
+    if (GetWord(arguments, strValue) && HexStrToInt(strValue, iValue) && iValue <= 0xF)
+    {
+      if (GetWord(arguments, strKey) && CECKeyNameToCode(strKey, &code))
+      {
+        PrintToStdOut("sending key code : %2X", code);
+        parser->SendKeypress((cec_logical_address) iValue, code);
+        parser->SendKeyRelease((cec_logical_address) iValue);
+        return true;
+      }
+      else
+      {
+        PrintToStdOut("invalid key name/code");
+      }
+    }
+    else
+    {
+      PrintToStdOut("invalid destination");
+    }
   }
 
   return false;
@@ -930,6 +1058,7 @@ bool ProcessConsoleCommand(ICECAdapter *parser, string &input)
       ProcessCommandVOLUP(parser, command, input) ||
       ProcessCommandVOLDOWN(parser, command, input) ||
       ProcessCommandMUTE(parser, command, input) ||
+      ProcessCommandKEY(parser, command, input) ||
       ProcessCommandMON(parser, command, input) ||
       ProcessCommandBL(parser, command, input) ||
       ProcessCommandLANG(parser, command, input) ||
